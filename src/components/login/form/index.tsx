@@ -1,9 +1,11 @@
 "use client";
 
 import * as Input from "@/components/ui/auth-input";
+import api from "@/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleNotch, Eye, EyeClosed, Lock, User } from "@phosphor-icons/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -13,6 +15,8 @@ export function Form() {
   const [isPending, startTransition] = useTransition();
   const [showPassword, setShowPassword] = useState(false);
 
+  const router = useRouter();
+
   const {
     handleSubmit,
     register,
@@ -21,11 +25,28 @@ export function Form() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async ({ username, password }) => {
     startTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      try {
+        await api.post(
+          "/login",
+          {
+            username,
+            password,
+          },
+          { withCredentials: true }
+        );
 
-      toast.error("Usuário ou senha inválidos!");
+        router.push("/dashboard");
+      } catch (err: any) {
+        console.log(err);
+
+        toast.error(
+          err.status == "401"
+            ? "Credenciais inválidas!"
+            : "Houve um erro ao efetuar login!"
+        );
+      }
     });
   };
 

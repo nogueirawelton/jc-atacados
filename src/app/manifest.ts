@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "JC Atacados",
-    short_name: "JC",
+    short_name: "JC ",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
