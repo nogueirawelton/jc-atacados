@@ -1,9 +1,16 @@
+import { Distribuitor } from "@/components/dashboard/distribuitor";
+import { Seller } from "@/components/dashboard/seller";
+import useAuth from "@/hooks/useAuth";
+
 export default async function Dashboard() {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/users`
+  const {
+    user: { username, role },
+  } = await useAuth();
+
+  return (
+    <div className="text-black dark:text-white">
+      <div>Olá {username}!</div>
+      {role == "ROLE_DISTRIBUTOR" ? <Distribuitor /> : <Seller />}
+    </div>
   );
-
-  console.log(response);
-
-  return <div className="text-black dark:text-white">Olá amigo!</div>;
 }

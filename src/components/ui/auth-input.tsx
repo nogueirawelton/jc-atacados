@@ -10,7 +10,7 @@ function Root({ error, className, children, ...props }: RootProps) {
     <div>
       <div
         className={twMerge(
-          "border group transition-all duration-500 ring-1 focus-within:ring-zinc-900 ring-transparent focus-within:dark:ring-zinc-300 relative px-4 flex items-center gap-2 border-zinc-300 dark:border-zinc-600 rounded-lg",
+          "border group transition-all duration-500 ring-1 focus-within:ring-zinc-900 ring-transparent focus-within:dark:ring-zinc-300 relative px-4 flex items-center gap-2 border-zinc-300 dark:border-zinc-600 rounded-md",
           className
         )}
         {...props}

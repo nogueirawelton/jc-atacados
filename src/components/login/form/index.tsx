@@ -1,7 +1,7 @@
 "use client";
 
+import { loginAction } from "@/actions/login-action";
 import * as Input from "@/components/ui/auth-input";
-import api from "@/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleNotch, Eye, EyeClosed, Lock, User } from "@phosphor-icons/react";
 import Link from "next/link";
@@ -25,28 +25,15 @@ export function Form() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<FormData> = async ({ username, password }) => {
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     startTransition(async () => {
-      try {
-        await api.post(
-          "/login",
-          {
-            username,
-            password,
-          },
-          { withCredentials: true }
-        );
+      const { success, message } = await loginAction(data);
 
-        router.push("/dashboard");
-      } catch (err: any) {
-        console.log(err);
-
-        toast.error(
-          err.status == "401"
-            ? "Credenciais inválidas!"
-            : "Houve um erro ao efetuar login!"
-        );
+      if (!success) {
+        toast.error(message);
       }
+
+      router.push("/dashboard");
     });
   };
 
@@ -104,7 +91,7 @@ export function Form() {
       <button
         type="submit"
         disabled={isPending}
-        className="w-full disabled:opacity-75 hover:opacity-90 transition-all duration-500 grid place-items-center bg-zinc-900 text-zinc-50 rounded-lg dark:bg-zinc-50 dark:text-zinc-900 text-base h-14 font-bold"
+        className="w-full disabled:opacity-75 hover:opacity-90 transition-all duration-500 grid place-items-center bg-zinc-900 text-zinc-50 rounded-md dark:bg-zinc-50 dark:text-zinc-900 text-base h-14 font-bold"
       >
         {isPending ? <CircleNotch className="animate-spin size-7" /> : "Entrar"}
       </button>
